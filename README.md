@@ -17,6 +17,18 @@ The arm is a USB device, so a small driver always runs on the computer it is plu
 into. Everything heavy (Gazebo, RViz, MoveIt) runs on the cluster, so you never need a
 GPU or a ROS install on your own laptop for the simulation parts.
 
+## What's in this repo
+
+| Folder | Convention | Contents |
+|---|---|---|
+| `so_arm101_moveit_config/` | `<robot>_moveit_config` | MoveIt config for the SO-101: SRDF, kinematics, planners, controllers, RViz, `demo.launch.py` |
+| `so101_gazebo/` | `<robot>_gazebo` | simulation scenes: `models/<name>/model.sdf` + `model.config` (Gazebo model layout), `launch/` |
+| `setup.sh` | — | loads ROS and the workspace (Part 2) |
+
+The robot model itself (URDF/Xacro, meshes) is not here: it comes from
+`so_arm101_description` in [ros2_so_arm](https://github.com/ros-physical-ai/ros2_so_arm).
+The students' pick code will get its own package (`so101_pick_lab`).
+
 **Tested with:** Ubuntu 24.04 laptop · LeRobot v0.6.1 (source, commit `2774d9bd`) ·
 Python 3.12 · ROS 2 Jazzy on the RAP cluster · `ros2_so_arm` + `feetech_ros2_driver` `main`.
 
@@ -132,7 +144,7 @@ viewer can't keep up and slows the control loop
 |---|---|---|
 | [ros-physical-ai/ros2_so_arm](https://github.com/ros-physical-ai/ros2_so_arm) | SO-101 model, controllers, Gazebo | `git clone` |
 | [JafarAbdi/feetech_ros2_driver](https://github.com/JafarAbdi/feetech_ros2_driver) | servo driver; `ros2_so_arm` depends on it, not available via apt | `git clone` |
-| [michaljohnson/cas-so101](https://github.com/michaljohnson/cas-so101) (this repo) | `setup.sh`, the SO-101 MoveIt config (Part 5), the pick lab | `git clone` |
+| [michaljohnson/cas-so101](https://github.com/michaljohnson/cas-so101) (this repo) | `setup.sh`, the SO-101 MoveIt config (Part 5), the Gazebo pick scene | `git clone` |
 
 ### 2.1 Where to put it
 
@@ -148,7 +160,7 @@ Keep the course in its own folder there:
     ├── src/
     │   ├── ros2_so_arm/                   # from GitHub, untouched
     │   ├── feetech_ros2_driver/           # from GitHub, untouched
-    │   └── cas-so101/                     # this repo: so_arm101_moveit_config, so101_pick_lab
+    │   └── cas-so101/                     # this repo: so_arm101_moveit_config, so101_gazebo
     ├── build/  install/  log/             # created by colcon, safe to delete
 ```
 
@@ -305,11 +317,11 @@ tries to reach the exact pose you ask for, so choose poses the arm can reach
 ### 5.3 Pick a pen in simulation 🚧
 
 ```bash
-ros2 launch so101_pick_lab pick_sim.launch.py
+ros2 launch so101_gazebo pick_scene.launch.py
 ```
 
 Starts the Gazebo demo from 5.2, then puts a table under the arm (after ~4 s) and
-drops a pen on it in front of the arm (after ~6 s). The arm is spawned 0.845 m above
+drops a pen on it in front of the arm (right after the table). The arm is spawned 0.845 m above
 the ground, rotated 180°, so "in front" is world −x; move the pen with
 `pen_x:=... pen_y:=...` if needed.
 

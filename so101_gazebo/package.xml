@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>so101_pick_lab</name>
+  <name>so101_gazebo</name>
   <version>0.1.0</version>
   <description>
-    SO-101 pick lab for the ZHAW CAS Physical AI &amp; Robotics course (Module C, Session 8):
-    simulation world objects and the pick exercise.
+    Gazebo scenes and models for the SO-101 in the ZHAW CAS Physical AI &amp; Robotics
+    course (Module C): table, pen and the pick scene launch.
   </description>
   <maintainer email="michalmederlet@gmail.com">Michal Johnson</maintainer>
   <license>BSD-3-Clause</license>

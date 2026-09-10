@@ -47,6 +47,7 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=["gripper_controller"],
+        parameters=[{"use_sim_time": True}],
         condition=IfCondition(is_gazebo),
     )
 

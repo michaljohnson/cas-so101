@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- A pen: cylinder 14 cm long, 16 mm thick, 20 g. High friction so the SO-101
-     gripper can hold it. Spawned on the table, lying on its side, by pick_sim.launch.py. -->
+     gripper can hold it. Spawned on the table, lying on its side, by pick_scene.launch.py. -->
 <sdf version="1.9">
   <model name="pen">
     <link name="link">
