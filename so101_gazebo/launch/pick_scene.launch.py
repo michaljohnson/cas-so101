@@ -26,6 +26,7 @@ def spawn(name, pose):
     return Node(
         package="ros_gz_sim",
         executable="create",
+        output="screen",
         arguments=["-world", "empty", "-name", name, "-file", model] + pose,
     )
 
