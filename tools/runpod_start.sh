@@ -24,5 +24,8 @@
   Xvfb :0 -screen 0 1920x1080x24 +extension GLX -nolisten tcp -ac &
 ) &
 
-/etc/entrypoint.sh 2>&1
+# </dev/null: this script arrives through a pipe (curl | bash), and the entrypoint
+# ends with `read`. Without it, that read would swallow the next line of this
+# script, bash would exit, and RunPod would restart the container in a loop.
+/etc/entrypoint.sh 2>&1 </dev/null
 sleep infinity
