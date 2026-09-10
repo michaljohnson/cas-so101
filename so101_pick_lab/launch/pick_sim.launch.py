@@ -1,0 +1,53 @@
+"""Pick lab in simulation: SO-101 MoveIt + Gazebo demo, a table and a pen.
+
+so_arm_gz spawns the arm at (0, -0.488, 0.845), rotated 180 deg, so its reach
+direction is world -x. The table top is at 0.845 under the arm; the pen lies on
+it ~22 cm in front of the base, across the reach direction.
+
+ros2 launch so101_pick_lab pick_sim.launch.py pen_x:=-0.22 pen_y:=-0.488
+"""
+
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.launch_description_sources import AnyLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
+
+
+def spawn(name, pose):
+    model = PathJoinSubstitution([FindPackageShare("so101_pick_lab"), "models", f"{name}.sdf"])
+    return Node(
+        package="ros_gz_sim",
+        executable="create",
+        arguments=["-world", "empty", "-name", name, "-file", model] + pose,
+    )
+
+
+def generate_launch_description():
+    demo = IncludeLaunchDescription(
+        AnyLaunchDescriptionSource(
+            PathJoinSubstitution(
+                [FindPackageShare("so_arm101_moveit_config"), "launch", "demo.launch.py"]
+            )
+        ),
+        launch_arguments={"hardware_type": "gazebo"}.items(),
+    )
+
+    table = spawn("table", ["-x", "-0.15", "-y", "-0.488", "-z", "0.4225"])
+    pen = spawn(
+        "pen",
+        ["-x", LaunchConfiguration("pen_x"), "-y", LaunchConfiguration("pen_y"),
+         "-z", "0.87", "-R", "1.5708"],
+    )
+
+    return LaunchDescription(
+        [
+            DeclareLaunchArgument("pen_x", default_value="-0.22", description="Pen position x [m]"),
+            DeclareLaunchArgument("pen_y", default_value="-0.488", description="Pen position y [m]"),
+            demo,
+            # Table first, then the pen drops onto it.
+            TimerAction(period=4.0, actions=[table]),
+            TimerAction(period=6.0, actions=[pen]),
+        ]
+    )

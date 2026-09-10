@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!-- A pen: cylinder 14 cm long, 16 mm thick, 20 g. High friction so the SO-101
+     gripper can hold it. Spawned on the table, lying on its side, by pick_sim.launch.py. -->
+<sdf version="1.9">
+  <model name="pen">
+    <link name="link">
+      <inertial>
+        <mass>0.02</mass>
+        <inertia><ixx>3.3e-5</ixx><iyy>3.3e-5</iyy><izz>6.4e-7</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry><cylinder><radius>0.008</radius><length>0.14</length></cylinder></geometry>
+        <surface><friction><ode><mu>2.0</mu><mu2>2.0</mu2></ode></friction></surface>
+      </collision>
+      <visual name="visual">
+        <geometry><cylinder><radius>0.008</radius><length>0.14</length></cylinder></geometry>
+        <material><ambient>0.1 0.1 0.8 1</ambient><diffuse>0.1 0.1 0.8 1</diffuse></material>
+      </visual>
+    </link>
+  </model>
+</sdf>
