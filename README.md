@@ -349,6 +349,7 @@ gripper (with the allowed touch links) solves this — that is part of the pick 
 | Follower doesn't move / wrong arm reacts | ports swapped | `lerobot-find-port` again (1.3) |
 | `Sender has been blocked for over 5 seconds` | Rerun viewer can't keep up | `--display_compressed_images=true` |
 | `No module named 'catkin_pkg'` during colcon build | a Python venv/conda env is active | `deactivate` / `conda deactivate`, or use `setup.sh` |
+| `CMake Error: The source directory ".../src/<pkg>" does not exist` | the package was moved; colcon's cache in `build/<pkg>` still points to the old place | `rm -rf build/<pkg> install/<pkg>`, then `colcon build` |
 | `Package 'so_arm_gz' not found` | workspace not loaded in this terminal | `source ~/rap/cas/setup.sh so101` |
 | RViz shows the arm moving, Gazebo doesn't | a second (old) `move_group` or mock `ros2_control_node` gets the commands; `ros2 node list` warns about duplicate names | stop all launches, `ros2 daemon stop`, check `ros2 node list` is empty, relaunch |
 | `ros2 node list` shows nodes that aren't running | the ROS 2 daemon caches old nodes | `ros2 daemon stop` |
