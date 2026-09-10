@@ -22,7 +22,6 @@ GPU or a ROS install on your own laptop for the simulation parts.
 | Folder | Convention | Contents |
 |---|---|---|
 | `so_arm101_moveit_config/` | `<robot>_moveit_config` | MoveIt config for the SO-101: SRDF, kinematics, planners, controllers, RViz, `demo.launch.py` |
-| `so101_gazebo/` | `<robot>_gazebo` | simulation scenes: `models/<name>/model.sdf` + `model.config` (Gazebo model layout), `launch/` |
 | `setup.sh` | — | loads ROS and the workspace (Part 2) |
 
 The robot model itself (URDF/Xacro, meshes) is not here: it comes from
@@ -144,7 +143,7 @@ viewer can't keep up and slows the control loop
 |---|---|---|
 | [ros-physical-ai/ros2_so_arm](https://github.com/ros-physical-ai/ros2_so_arm) | SO-101 model, controllers, Gazebo | `git clone` |
 | [JafarAbdi/feetech_ros2_driver](https://github.com/JafarAbdi/feetech_ros2_driver) | servo driver; `ros2_so_arm` depends on it, not available via apt | `git clone` |
-| [michaljohnson/cas-so101](https://github.com/michaljohnson/cas-so101) (this repo) | `setup.sh`, the SO-101 MoveIt config (Part 5), the Gazebo pick scene | `git clone` |
+| [michaljohnson/cas-so101](https://github.com/michaljohnson/cas-so101) (this repo) | `setup.sh`, the SO-101 MoveIt config (Part 5) | `git clone` |
 
 ### 2.1 Where to put it
 
@@ -160,7 +159,7 @@ Keep the course in its own folder there:
     ├── src/
     │   ├── ros2_so_arm/                   # from GitHub, untouched
     │   ├── feetech_ros2_driver/           # from GitHub, untouched
-    │   └── cas-so101/                     # this repo: so_arm101_moveit_config, so101_gazebo
+    │   └── cas-so101/                     # this repo: so_arm101_moveit_config
     ├── build/  install/  log/             # created by colcon, safe to delete
 ```
 
@@ -314,29 +313,25 @@ closely as the arm allows. This only affects RViz — in your own code, MoveIt s
 tries to reach the exact pose you ask for, so choose poses the arm can reach
 (e.g. gripper pointing down, turned towards the object). Named poses always work.
 
-### 5.3 Pick a pen in simulation 🚧
+### 5.3 Pick an object in simulation 🚧
 
-```bash
-ros2 launch so101_gazebo pick_scene.launch.py
-```
-
-Starts the Gazebo demo from 5.2, then puts a table under the arm and
-drops a pen on it in front of the arm, as soon as Gazebo is up. The arm is spawned 0.845 m above
-the ground, rotated 180°, so "in front" is world −x; move the pen with
-`pen_x:=... pen_y:=...` if needed.
+Start the Gazebo demo from 5.2 and add objects in Gazebo with the **Resource Spawner**
+(Gazebo menu ⋮ top right → *Resource Spawner*). Where things are:
+`so_arm_gz` spawns the arm 0.845 m above the ground, rotated 180°, so it reaches
+towards world −x, and an object on the floor is out of reach.
 
 Pick it by hand in RViz — for each step choose the planning group and goal, then
 *Plan & Execute*:
 
 1. group `gripper` → `open`
-2. group `manipulator` → marker ~5 cm above the pen, gripper pointing down
-3. marker straight down, jaws around the pen
+2. group `manipulator` → marker ~5 cm above the object, gripper pointing down
+3. marker straight down, jaws around the object
 4. group `gripper` → `closed`
-5. group `manipulator` → up: does the pen come along?
+5. group `manipulator` → up: does the object come along?
 
-The pen is deliberately **not** in MoveIt's planning scene: otherwise MoveIt refuses
-step 3 because the jaws would "collide" with it. In code, attaching the object to the
-gripper (with the allowed touch links) solves this — that is part of the pick lab.
+Objects added in Gazebo are **not** in MoveIt's planning scene, so MoveIt plans as if
+they weren't there. In code, adding the object to the planning scene and attaching it
+to the gripper (with the allowed touch links) is part of the pick lab.
 
 ---
 
