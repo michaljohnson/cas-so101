@@ -320,8 +320,8 @@ tries to reach the exact pose you ask for, so choose poses the arm can reach
 ros2 launch so101_gazebo pick_scene.launch.py
 ```
 
-Starts the Gazebo demo from 5.2, then puts a table under the arm (after ~4 s) and
-drops a pen on it in front of the arm (right after the table). The arm is spawned 0.845 m above
+Starts the Gazebo demo from 5.2, then puts a table under the arm and
+drops a pen on it in front of the arm, as soon as Gazebo is up. The arm is spawned 0.845 m above
 the ground, rotated 180°, so "in front" is world −x; move the pen with
 `pen_x:=... pen_y:=...` if needed.
 

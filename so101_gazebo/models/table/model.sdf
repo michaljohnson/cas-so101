@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
-<!-- Static table, 0.6 x 0.5 m, top at 0.845 m: the height so_arm_gz spawns
-     the arm at, so the arm stands on it like on a lab bench. -->
+<!-- Static table, 0.6 x 0.5 m, top at 0.842 m: 3 mm below where so_arm_gz spawns
+     the arm (0.845), so the arm's base stands just above it without touching —
+     contact between the fixed arm and the static table crashed Gazebo. -->
 <sdf version="1.9">
   <model name="table">
     <static>true</static>
     <link name="link">
       <collision name="collision">
-        <geometry><box><size>0.6 0.5 0.845</size></box></geometry>
+        <geometry><box><size>0.6 0.5 0.842</size></box></geometry>
         <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
       </collision>
       <visual name="visual">
-        <geometry><box><size>0.6 0.5 0.845</size></box></geometry>
+        <geometry><box><size>0.6 0.5 0.842</size></box></geometry>
         <material><ambient>0.55 0.4 0.25 1</ambient><diffuse>0.55 0.4 0.25 1</diffuse></material>
       </visual>
     </link>
