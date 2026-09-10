@@ -318,3 +318,12 @@ tries to reach the exact pose you ask for, so choose poses the arm can reach
 | Marker in RViz too big / too small | RViz setting | MotionPlanning → Planning Request → *Interactive Marker Size* (course config: 0.08) |
 | `rviz2: could not connect to display` / Gazebo doesn't open | no screen (SSH session) | `export DISPLAY=:0` (done by `setup.sh`) or use the web desktop terminal |
 | Every new terminal prints `No such file ... setup.bash` | `~/.bashrc` loads `~/env.sh`, which points to a moved workspace | fix or remove the stale line in that `env.sh` |
+
+---
+
+## Credits
+
+- Michal Johnson — setup, testing on the RAP cluster and RunPod, course integration.
+- [ros-physical-ai/ros2_so_arm](https://github.com/ros-physical-ai/ros2_so_arm) (Jafar Uruç) —
+  SO-101 description, Gazebo and the SO-100 MoveIt config that `so_arm101_moveit_config` is derived from.
+- Written with help from Claude (Anthropic): setup steps, the SO-101 MoveIt config and this README.
