@@ -316,9 +316,11 @@ tries to reach the exact pose you ask for, so choose poses the arm can reach
 ### 5.3 Pick an object in simulation 🚧
 
 Start the Gazebo demo from 5.2 and add objects in Gazebo with the **Resource Spawner**
-(Gazebo menu ⋮ top right → *Resource Spawner*). Where things are:
-`so_arm_gz` spawns the arm 0.845 m above the ground, rotated 180°, so it reaches
-towards world −x, and an object on the floor is out of reach.
+(Gazebo menu ⋮ top right → *Resource Spawner*). Where things are: the arm stands on
+the ground at the world origin and reaches towards **+x** (e.g. an object at
+x = 0.2, y = 0 on the floor is in reach). MoveIt plans in the same `world` frame, so
+Gazebo and MoveIt coordinates are identical. (`so_arm_gz` has `x/y/z` launch arguments,
+but the SO-101 model ignores them.)
 
 Pick it by hand in RViz — for each step choose the planning group and goal, then
 *Plan & Execute*:
@@ -329,9 +331,12 @@ Pick it by hand in RViz — for each step choose the planning group and goal, th
 4. group `gripper` → `closed`
 5. group `manipulator` → up: does the object come along?
 
-Objects added in Gazebo are **not** in MoveIt's planning scene, so MoveIt plans as if
-they weren't there. In code, adding the object to the planning scene and attaching it
-to the gripper (with the allowed touch links) is part of the pick lab.
+Objects added in Gazebo are **not** in MoveIt's planning scene: RViz doesn't show them
+and MoveIt plans as if they weren't there. To add one by hand: MotionPlanning panel →
+*Scene Objects* → pick a shape, set the same size and x/y/z as in Gazebo (select the
+object in Gazebo → *Component Inspector* → Pose). In code, adding the object to the
+planning scene and attaching it to the gripper (with the allowed touch links) is part
+of the pick lab.
 
 ---
 
