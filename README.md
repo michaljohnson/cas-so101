@@ -132,8 +132,7 @@ viewer can't keep up and slows the control loop
 |---|---|---|
 | [ros-physical-ai/ros2_so_arm](https://github.com/ros-physical-ai/ros2_so_arm) | SO-101 model, controllers, Gazebo | `git clone` |
 | [JafarAbdi/feetech_ros2_driver](https://github.com/JafarAbdi/feetech_ros2_driver) | servo driver; `ros2_so_arm` depends on it, not available via apt | `git clone` |
-| `so_arm101_moveit_config/` | SO-101 MoveIt config (Part 5), course-made | course materials |
-| `setup.sh` | loads ROS + the workspace, sets the variables below | course materials |
+| [michaljohnson/cas-so101](https://github.com/michaljohnson/cas-so101) (this repo) | `setup.sh`, the SO-101 MoveIt config (Part 5), the pick lab | `git clone` |
 
 ### 2.1 Where to put it
 
@@ -144,14 +143,17 @@ Keep the course in its own folder there:
 ```
 ~/rap/cas/
 ├── COLCON_IGNORE          # stops a colcon build started in ~/rap from building this
-├── setup.sh               # source ~/rap/cas/setup.sh so101
+├── setup.sh -> so101_ws/src/cas-so101/setup.sh    # a link, so git pull updates it
 └── so101_ws/
     ├── src/
     │   ├── ros2_so_arm/                   # from GitHub, untouched
     │   ├── feetech_ros2_driver/           # from GitHub, untouched
-    │   └── so_arm101_moveit_config/       # course package, added in Part 5
+    │   └── cas-so101/                     # this repo: so_arm101_moveit_config, so101_pick_lab
     ├── build/  install/  log/             # created by colcon, safe to delete
 ```
+
+colcon finds the packages inside `cas-so101/` by itself; the README and `setup.sh`
+next to them are ignored by the build.
 
 ### 2.2 Get the code
 
@@ -161,9 +163,13 @@ touch ~/rap/cas/COLCON_IGNORE
 cd ~/rap/cas/so101_ws/src
 git clone https://github.com/ros-physical-ai/ros2_so_arm.git
 git clone https://github.com/JafarAbdi/feetech_ros2_driver.git
+git clone https://github.com/michaljohnson/cas-so101.git
+ln -sf ~/rap/cas/so101_ws/src/cas-so101/setup.sh ~/rap/cas/setup.sh
 ```
 
-Copy the course's `setup.sh` to `~/rap/cas/setup.sh`. What it does, line by line:
+To get course updates later: `cd ~/rap/cas/so101_ws/src/cas-so101 && git pull`.
+
+What `setup.sh` does, line by line:
 
 | Line | Why |
 |---|---|
@@ -270,14 +276,9 @@ adapted from the SO-100 one:
 
 Only the **follower** arm is needed for MoveIt; the leader is just for teleoperation.
 
-### 5.1 Add and build the package
+### 5.1 Build
 
-```bash
-cp -r so_arm101_moveit_config ~/rap/cas/so101_ws/src/      # next to ros2_so_arm, not inside it
-source ~/rap/cas/setup.sh so101
-colcon build --symlink-install --packages-select so_arm101_moveit_config
-source ~/rap/cas/setup.sh so101
-```
+The package comes with this repo (Part 2.2), so the build in 2.3 already includes it.
 
 ### 5.2 Run it
 
@@ -300,6 +301,30 @@ therefore ticks *Approx IK Solutions* (Planning tab): the goal follows the marke
 closely as the arm allows. This only affects RViz — in your own code, MoveIt still
 tries to reach the exact pose you ask for, so choose poses the arm can reach
 (e.g. gripper pointing down, turned towards the object). Named poses always work.
+
+### 5.3 Pick a pen in simulation 🚧
+
+```bash
+ros2 launch so101_pick_lab pick_sim.launch.py
+```
+
+Starts the Gazebo demo from 5.2, then puts a table under the arm (after ~4 s) and
+drops a pen on it in front of the arm (after ~6 s). The arm is spawned 0.845 m above
+the ground, rotated 180°, so "in front" is world −x; move the pen with
+`pen_x:=... pen_y:=...` if needed.
+
+Pick it by hand in RViz — for each step choose the planning group and goal, then
+*Plan & Execute*:
+
+1. group `gripper` → `open`
+2. group `manipulator` → marker ~5 cm above the pen, gripper pointing down
+3. marker straight down, jaws around the pen
+4. group `gripper` → `closed`
+5. group `manipulator` → up: does the pen come along?
+
+The pen is deliberately **not** in MoveIt's planning scene: otherwise MoveIt refuses
+step 3 because the jaws would "collide" with it. In code, attaching the object to the
+gripper (with the allowed touch links) solves this — that is part of the pick lab.
 
 ---
 
